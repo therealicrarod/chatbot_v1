@@ -1,0 +1,92 @@
+var express = require('express'),
+    bodyParser = require('body-parser');
+const cors = require('cors'),
+      fetch= require("node-fetch"),
+      userHandler = require("./userHandler"),
+      messageHandler = require ("./msgHandler"),
+      CLIENT_TOKEN = process.env.WIT_TOKEN_CLIENT,
+      
+      auth = 'Bearer ' + CLIENT_TOKEN;//}
+
+const fs = require("fs");
+var res;
+
+var app = express();
+
+app.options('*', cors())
+
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json())
+
+var corsOptions={
+  'origin':'*',
+  'methods':'GET, POST',
+  optionsSuccessStatus:200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+};
+
+app.get("/", function (request, response) {
+  response.send("Hello this is an API, so you're looking in the wrong site");
+});
+
+app.post("/chatbot", cors(corsOptions), function (request, response) {
+   //console.log('Incoming data: ' + JSON.stringify(request.body));
+  
+  let payload = request.body;
+  var message = payload.data.message;
+  
+  
+  let respVal = request.body.type;
+  //console.log("The incoming message is"+respVal);
+  
+  let data,resData, responseBot; 
+  
+  switch (respVal){
+    case "user":
+      //console.log("User payload");
+      data = userHandler.userDataHandler(request.body);
+      response.status(200).json(data);
+      break;
+    case "message":
+    
+    //console.log("OK")
+
+    //console.log(messageHandler.messageHandler(message))
+     
+    function callWit(payload){
+      const q = encodeURIComponent(payload),
+      uri = 'https://api.wit.ai/message?v=1518190248669277&q=' + q;
+      
+     return fetch(uri, {headers: {Authorization: auth}})
+        .then(res=>res.json())
+
+    }
+    
+    function processData (payload){
+      return 
+    }
+      
+    function createResponseBody(payload){
+      let data= {
+          status:"success",
+          message:{
+          validation:"validMsg",
+          payload:{
+            value: messageHandler.messageHandler(payload),
+          message:payload}}}
+      return data
+          }
+        
+      
+  callWit(message).then(function (result){
+    let responseBody = 
+    response.status(200).json(createResponseBody(result))
+    console.log("witCall"+JSON.stringify(result))
+  })
+
+  }})
+         
+//response.status(200).json(res)
+
+var listener = app.listen(process.env.PORT, function () {
+  console.log('Your app is listening on port ' + listener.address().port);
+});
