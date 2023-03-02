@@ -1,0 +1,30 @@
+{
+  "name": "wa-webhooks-test",
+  "version": "0.0.1",
+  "description": "This is a boilerplate app used to test WhatsApp webhooks",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "async": "*",
+    "body-parser": "^1.18.3",
+    "cors": "*",
+    "crypto-js": "^3.3.0",
+    "encoding": "*",
+    "express": "^4.16.3",
+    "node-fetch": "^2.6.9"
+  },
+  "engines": {
+    "node": "12.10.x"
+  },
+  "repository": {
+    "url": "https://glitch.com/edit/#!/welcome-project"
+  },
+  "license": "MIT",
+  "keywords": [
+    "node",
+    "glitch",
+    "express"
+  ]
+}
